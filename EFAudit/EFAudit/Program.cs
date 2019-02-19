@@ -13,6 +13,7 @@ namespace EFAudit
         {
             int id = AddTest();
             EditTest();
+            SoftDeleteTest();
             DeleteTest();
             ShowHistory(id);
         }
@@ -26,14 +27,12 @@ namespace EFAudit
                 var product = new Product()
                 {
                     Name = "Product Name",
-                    Category = category
+                    Category = category,
+                    Description = "Product Description",
+                    Price = 10.23M
                 };
 
                 db.Products.Add(product);
-
-                //var audit = new Audit();
-                //audit.CreatedBy = "UserName";
-                //db.SaveChanges(audit);
 
                 db.SaveChanges();
 
@@ -55,6 +54,20 @@ namespace EFAudit
 
                 product.Category = category;
                 product.Name = "New Product Name";
+
+                db.SaveChanges();
+            }
+        }
+
+        static void SoftDeleteTest()
+        {
+            using (DataContext db = new DataContext())
+            {
+                var product = db.Products
+                    .OrderByDescending(c => c.Id)
+                    .FirstOrDefault();
+
+                product.IsActive = false;
 
                 db.SaveChanges();
             }

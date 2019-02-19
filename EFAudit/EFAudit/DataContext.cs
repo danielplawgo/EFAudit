@@ -34,8 +34,7 @@ namespace EFAudit
 
         public override int SaveChanges()
         {
-            var audit = new Audit();
-            audit.CreatedBy = UserName;
+            var audit = ConfigureAudit();
 
             audit.PreSaveChanges(this);
             var rowAffecteds = base.SaveChanges();
@@ -48,6 +47,32 @@ namespace EFAudit
             }
 
             return rowAffecteds;
+        }
+
+        private Audit ConfigureAudit()
+        {
+            var audit = new Audit();
+            audit.CreatedBy = UserName;
+
+            //audit.Configuration.Exclude(o => true);
+            //audit.Configuration.Include<Product>();
+            //audit.Configuration.Include(o => o is Product && ((Product)o).Name == "Product Name");
+
+            //audit.Configuration.Exclude<Product>();
+            //audit.Configuration.Exclude(o => o is Product && ((Product)o).Name == "Product Name");
+
+            //audit.Configuration.ExcludeProperty<BaseModel>(t => t.IsActive);
+
+            //audit.Configuration.ExcludeProperty<Product>();
+            //audit.Configuration.IncludeProperty<Product>(t => t.Name);
+
+            //audit.Configuration.Format<Product>(x => x.Price, x => ((decimal)x).ToString("0.00 zl"));
+
+            //audit.Configuration.IgnorePropertyUnchanged = false;
+
+            //audit.Configuration.SoftDeleted<BaseModel>(x => x.IsActive == false);
+
+            return audit;
         }
     }
 }
